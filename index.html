@@ -4,9 +4,43 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>TripSplitter</title>
+  <style>
+    body { font-family: sans-serif; max-width: 480px; margin: 20px auto; padding: 0 16px; }
+    input, button { font-size: 16px; padding: 10px; margin: 4px 0; width: 100%; box-sizing: border-box; }
+    li { margin: 6px 0; }
+  </style>
 </head>
 <body>
   <h1>TripSplitter</h1>
-  <p>Bientôt : partage des dépenses de voyage.</p>
+  <input id="qui" placeholder="Qui a payé ? (ex : Léa)">
+  <input id="montant" type="number" placeholder="Montant (€)">
+  <button onclick="ajouter()">Ajouter la dépense</button>
+  <ul id="liste"></ul>
+  <p id="total"></p>
+
+  <script>
+    const depenses = [];
+    function ajouter() {
+      const qui = document.getElementById('qui').value.trim();
+      const montant = parseFloat(document.getElementById('montant').value);
+      if (!qui || isNaN(montant)) return;
+      depenses.push({ qui, montant });
+      document.getElementById('qui').value = '';
+      document.getElementById('montant').value = '';
+      afficher();
+    }
+    function afficher() {
+      const liste = document.getElementById('liste');
+      liste.innerHTML = '';
+      let total = 0;
+      depenses.forEach(d => {
+        total += d.montant;
+        const li = document.createElement('li');
+        li.textContent = d.qui + ' : ' + d.montant.toFixed(2) + ' €';
+        liste.appendChild(li);
+      });
+      document.getElementById('total').textContent = 'Total : ' + total.toFixed(2) + ' €';
+    }
+  </script>
 </body>
 </html>
