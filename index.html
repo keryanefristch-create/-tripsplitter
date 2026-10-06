@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>TripSplitter</title>
-  <style>
+  #total { white-space: pre-line; }
+</style>
     body { font-family: sans-serif; max-width: 480px; margin: 20px auto; padding: 0 16px; }
     input, button { font-size: 16px; padding: 10px; margin: 4px 0; width: 100%; box-sizing: border-box; }
     li { margin: 6px 0; }
@@ -39,8 +40,21 @@
         li.textContent = d.qui + ' : ' + d.montant.toFixed(2) + ' €';
         liste.appendChild(li);
       });
-      document.getElementById('total').textContent = 'Total : ' + total.toFixed(2) + ' €';
-    }
+const noms = [...new Set(depenses.map(d => d.qui.charAt(0).toUpperCase() + d.qui.slice(1)))];
+const part = total / noms.length;
+const paye = {};
+noms.forEach(n => paye[n] = 0);
+depenses.forEach(d => {
+  const n = d.qui.charAt(0).toUpperCase() + d.qui.slice(1);
+  paye[n] += d.montant;
+});
+let texte = 'Total : ' + total.toFixed(2) + ' € (' + part.toFixed(2) + ' € par personne)';
+noms.forEach(n => {
+  const solde = paye[n] - part;
+  texte += '\n' + n + (solde >= 0 ? ' doit recevoir ' : ' doit ') + Math.abs(solde).toFixed(2) + ' €';
+});
+document.getElementById('total').textContent = texte;
+
   </script>
 </body>
 </html>
